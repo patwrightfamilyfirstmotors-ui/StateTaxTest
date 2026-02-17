@@ -1,67 +1,166 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>State Tax Calculator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 40px;
-        }
-        input, select, button {
-            padding: 8px;
-            margin: 10px 0;
-            font-size: 16px;
-        }
-        #result {
-            margin-top: 20px;
-            font-weight: bold;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>State Tax Calculator</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #4e73df, #1cc88a);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .card {
+        background: white;
+        padding: 30px;
+        width: 380px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+        margin-top: 0;
+        text-align: center;
+        color: #333;
+    }
+
+    label {
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+        box-sizing: border-box;
+    }
+
+    input:focus, select:focus {
+        border-color: #4e73df;
+        outline: none;
+    }
+
+    .result {
+        background: #f8f9fc;
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 15px;
+    }
+
+    .total {
+        font-size: 18px;
+        font-weight: bold;
+        color: #1cc88a;
+        margin-top: 10px;
+    }
+</style>
 </head>
+
 <body>
 
-    <h2>Price + Tax + $279 Fee Calculator</h2>
+<div class="card">
+    <h2>Tax + $279 Fee Calculator</h2>
 
-    <label>Enter Price:</label><br>
-    <input type="number" id="price" placeholder="Enter amount" />
+    <label>Enter Price</label>
+    <input type="number" id="price" placeholder="Enter amount" step="0.01">
 
-    <br>
-
-    <label>Select State:</label><br>
+    <label>Select State</label>
     <select id="state">
         <option value="0.04">Alabama (4%)</option>
-        <option value="0.0625">California (6.25%)</option>
+        <option value="0">Alaska (0%)</option>
+        <option value="0.056">Arizona (5.6%)</option>
+        <option value="0.065">Arkansas (6.5%)</option>
+        <option value="0.0725">California (7.25%)</option>
+        <option value="0.029">Colorado (2.9%)</option>
+        <option value="0.0635">Connecticut (6.35%)</option>
+        <option value="0">Delaware (0%)</option>
         <option value="0.06">Florida (6%)</option>
-        <option value="0.0625">Texas (6.25%)</option>
+        <option value="0.04">Georgia (4%)</option>
+        <option value="0.04">Hawaii (4%)</option>
+        <option value="0.06">Idaho (6%)</option>
+        <option value="0.0625">Illinois (6.25%)</option>
+        <option value="0.07">Indiana (7%)</option>
+        <option value="0.06">Iowa (6%)</option>
+        <option value="0.065">Kansas (6.5%)</option>
+        <option value="0.06">Kentucky (6%)</option>
+        <option value="0.0445">Louisiana (4.45%)</option>
+        <option value="0.055">Maine (5.5%)</option>
+        <option value="0.06">Maryland (6%)</option>
+        <option value="0.0625">Massachusetts (6.25%)</option>
+        <option value="0.06">Michigan (6%)</option>
+        <option value="0.06875">Minnesota (6.875%)</option>
+        <option value="0.07">Mississippi (7%)</option>
+        <option value="0.04225">Missouri (4.225%)</option>
+        <option value="0">Montana (0%)</option>
+        <option value="0.055">Nebraska (5.5%)</option>
+        <option value="0.0685">Nevada (6.85%)</option>
+        <option value="0">New Hampshire (0%)</option>
+        <option value="0.06625">New Jersey (6.625%)</option>
+        <option value="0.05125">New Mexico (5.125%)</option>
+        <option value="0.04">New York (4%)</option>
+        <option value="0.0475">North Carolina (4.75%)</option>
+        <option value="0.05">North Dakota (5%)</option>
+        <option value="0.0575">Ohio (5.75%)</option>
+        <option value="0.045">Oklahoma (4.5%)</option>
         <option value="0">Oregon (0%)</option>
+        <option value="0.06">Pennsylvania (6%)</option>
+        <option value="0.07">Rhode Island (7%)</option>
+        <option value="0.06">South Carolina (6%)</option>
+        <option value="0.045">South Dakota (4.5%)</option>
+        <option value="0.07">Tennessee (7%)</option>
+        <option value="0.0625">Texas (6.25%)</option>
+        <option value="0.0485">Utah (4.85%)</option>
+        <option value="0.06">Vermont (6%)</option>
+        <option value="0.053">Virginia (5.3%)</option>
+        <option value="0.065">Washington (6.5%)</option>
+        <option value="0.06">West Virginia (6%)</option>
+        <option value="0.05">Wisconsin (5%)</option>
+        <option value="0.04">Wyoming (4%)</option>
     </select>
 
-    <br>
+    <div class="result" id="result">
+        Enter a price to see total.
+    </div>
+</div>
 
-    <button onclick="calculateTotal()">Calculate</button>
+<script>
+function calculateTotal() {
+    let price = parseFloat(document.getElementById("price").value);
+    let taxRate = parseFloat(document.getElementById("state").value);
+    let extraFee = 279;
 
-    <div id="result"></div>
+    if (isNaN(price) || price <= 0) {
+        document.getElementById("result").innerHTML = "Enter a valid price.";
+        return;
+    }
 
-    <script>
-        function calculateTotal() {
-            let price = parseFloat(document.getElementById("price").value);
-            let taxRate = parseFloat(document.getElementById("state").value);
-            let extraFee = 279;
+    let taxAmount = price * taxRate;
+    let total = price + taxAmount + extraFee;
 
-            if (isNaN(price)) {
-                document.getElementById("result").innerHTML = "Please enter a valid price.";
-                return;
-            }
+    document.getElementById("result").innerHTML = `
+        Price: $${price.toFixed(2)} <br>
+        State Tax: $${taxAmount.toFixed(2)} <br>
+        Extra Fee: $279.00
+        <div class="total">
+            Final Total: $${total.toFixed(2)}
+        </div>
+    `;
+}
 
-            let taxAmount = price * taxRate;
-            let total = price + taxAmount + extraFee;
-
-            document.getElementById("result").innerHTML =
-                "Tax: $" + taxAmount.toFixed(2) + "<br>" +
-                "Extra Fee: $" + extraFee.toFixed(2) + "<br>" +
-                "Final Total: $" + total.toFixed(2);
-        }
-    </script>
+document.getElementById("price").addEventListener("input", calculateTotal);
+document.getElementById("state").addEventListener("change", calculateTotal);
+</script>
 
 </body>
 </html>
