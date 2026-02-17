@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>State Tax Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+        input, select, button {
+            padding: 8px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Price + Tax + $279 Fee Calculator</h2>
+
+    <label>Enter Price:</label><br>
+    <input type="number" id="price" placeholder="Enter amount" />
+
+    <br>
+
+    <label>Select State:</label><br>
+    <select id="state">
+        <option value="0.04">Alabama (4%)</option>
+        <option value="0.0625">California (6.25%)</option>
+        <option value="0.06">Florida (6%)</option>
+        <option value="0.0625">Texas (6.25%)</option>
+        <option value="0">Oregon (0%)</option>
+    </select>
+
+    <br>
+
+    <button onclick="calculateTotal()">Calculate</button>
+
+    <div id="result"></div>
+
+    <script>
+        function calculateTotal() {
+            let price = parseFloat(document.getElementById("price").value);
+            let taxRate = parseFloat(document.getElementById("state").value);
+            let extraFee = 279;
+
+            if (isNaN(price)) {
+                document.getElementById("result").innerHTML = "Please enter a valid price.";
+                return;
+            }
+
+            let taxAmount = price * taxRate;
+            let total = price + taxAmount + extraFee;
+
+            document.getElementById("result").innerHTML =
+                "Tax: $" + taxAmount.toFixed(2) + "<br>" +
+                "Extra Fee: $" + extraFee.toFixed(2) + "<br>" +
+                "Final Total: $" + total.toFixed(2);
+        }
+    </script>
+
+</body>
+</html>
